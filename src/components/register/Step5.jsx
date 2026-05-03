@@ -45,7 +45,7 @@ export function Step5({ data }) {
           Your personalized wellness journey starts now.
         </p>
       </div>
-      <div className="w-full rounded-2xl border border-gray-100 bg-gray-50 p-4 text-left text-sm text-gray-800 space-y-2">
+      <div className="w-full rounded-2xl border border-gray-100 bg-gray-50 p-4 text-left text-sm text-gray-800 flex flex-col gap-2">
         {data.goals?.length > 0 && (
           <div className="flex gap-2">
             <Target size={14} className="text-gray-400 mt-0.5 shrink-0" />

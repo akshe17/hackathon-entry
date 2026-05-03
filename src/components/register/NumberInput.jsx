@@ -1,37 +1,26 @@
-import { FieldError } from "./FieldError";
-export function NumberInput({
-  label,
-  placeholder,
-  value,
-  onChange,
-  min,
-  max,
-  unit,
-  error,
-}) {
+import { NumberInput as MantineNumberInput } from "@mantine/core";
+
+const inputStyles = {
+  wrapper: { display: "flex", flexDirection: "column", gap: "0.5rem" },
+  label: { fontWeight: 600, fontSize: "0.875rem", color: "#111827", marginBottom: 0 },
+  input: { backgroundColor: "#f3f4f6", border: "none" },
+};
+
+export function NumberInput({ label, placeholder, value, onChange, min, max, unit, error }) {
   return (
-    <div className="flex flex-col gap-1">
-      {label && (
-        <label className="text-sm font-semibold text-gray-900">{label}</label>
-      )}
-      <div className="relative">
-        <input
-          type="number"
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          min={min}
-          max={max}
-          className={`w-full rounded-lg bg-[#f3f4f6] px-4 py-3 pr-14 text-sm text-gray-900 placeholder-gray-500 outline-none transition border-none focus:ring-2 focus:ring-[#1d4ed8]
-            ${error ? "ring-2 ring-red-300 focus:ring-red-400" : ""}`}
-        />
-        {unit && (
-          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-400">
-            {unit}
-          </span>
-        )}
-      </div>
-      <FieldError message={error} />
-    </div>
+    <MantineNumberInput
+      label={label}
+      placeholder={placeholder}
+      value={value === "" ? "" : Number(value)}
+      onChange={(val) => onChange(val === "" ? "" : String(val))}
+      min={min}
+      max={max}
+      size="md"
+      radius="md"
+      error={error}
+      hideControls
+      rightSection={unit ? <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#9ca3af", paddingRight: 8 }}>{unit}</span> : null}
+      styles={inputStyles}
+    />
   );
 }

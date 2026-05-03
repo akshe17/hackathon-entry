@@ -1,11 +1,11 @@
 import { ChipGroup } from "./ChipGroups";
-import { TextInput } from "./TextInput";
-import { Utensils } from "lucide-react";
-const GOALS = [
+import { SelectInput } from "./SelectInput";
+
+const HEALTH_GOALS = [
   { value: "eat_healthier", label: "Eat Healthier" },
   { value: "lose_weight", label: "Lose Weight" },
   { value: "gain_weight", label: "Gain Weight" },
-  { value: "maintain", label: "Maintain Weight" },
+  { value: "maintain_weight", label: "Maintain Weight" },
   { value: "build_muscle", label: "Build Muscle" },
   { value: "reduce_sugar", label: "Reduce Sugar" },
   { value: "reduce_sodium", label: "Reduce Sodium" },
@@ -23,48 +23,59 @@ const ALLERGIES = [
   { value: "none", label: "None" },
 ];
 
+const FOOD_PREFERENCES = [
+  { value: "vegetarian", label: "Vegetarian" },
+  { value: "vegan", label: "Vegan" },
+  { value: "pescatarian", label: "Pescatarian" },
+  { value: "halal", label: "Halal" },
+  { value: "kosher", label: "Kosher" },
+  { value: "none", label: "No Preference" },
+];
+
+const DIET_RESTRICTIONS = [
+  { value: "low_sodium", label: "Low Sodium" },
+  { value: "low_sugar", label: "Low Sugar" },
+  { value: "low_fat", label: "Low Fat" },
+  { value: "low_carb", label: "Low Carb" },
+  { value: "high_protein", label: "High Protein" },
+  { value: "none", label: "None" },
+];
+
 export function Step3({ data, set, errors }) {
-  const toggleGoal = (val) => {
-    const current = data.goals || [];
-    set(
-      "goals",
-      current.includes(val)
-        ? current.filter((g) => g !== val)
-        : [...current, val],
-    );
-  };
-  const toggleAllergy = (val) => {
-    const current = data.allergies || [];
-    set(
-      "allergies",
-      current.includes(val)
-        ? current.filter((a) => a !== val)
-        : [...current, val],
-    );
+  const toggle = (key) => (val) => {
+    const current = data[key] || [];
+    set(key, current.includes(val) ? current.filter((v) => v !== val) : [...current, val]);
   };
 
   return (
     <div className="flex flex-col gap-5">
-      <ChipGroup
-        label="Health Goals (pick all that apply)"
-        options={GOALS}
-        selected={data.goals || []}
-        onToggle={toggleGoal}
-        error={errors.goals}
+      <SelectInput
+        label="Primary Health Goal"
+        value={data.healthGoal}
+        onChange={(v) => set("healthGoal", v)}
+        options={HEALTH_GOALS}
+        error={errors.healthGoal}
       />
       <ChipGroup
-        label="Allergies & Restrictions"
+        label="Allergies"
         options={ALLERGIES}
         selected={data.allergies || []}
-        onToggle={toggleAllergy}
+        onToggle={toggle("allergies")}
         error={errors.allergies}
       />
-      <TextInput
-        label="Other dietary preference (optional)"
-        placeholder="e.g. vegetarian, halal, kosher…"
-        value={data.diet}
-        onChange={(v) => set("diet", v)}
-        icon={Utensils}
+      <ChipGroup
+        label="Food Preferences"
+        options={FOOD_PREFERENCES}
+        selected={data.foodPreferences || []}
+        onToggle={toggle("foodPreferences")}
+        error={errors.foodPreferences}
+      />
+      <ChipGroup
+        label="Dietary Restrictions"
+        options={DIET_RESTRICTIONS}
+        selected={data.dietRestrictions || []}
+        onToggle={toggle("dietRestrictions")}
+        error={errors.dietRestrictions}
       />
     </div>
   );

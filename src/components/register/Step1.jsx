@@ -1,16 +1,30 @@
 import { TextInput } from "./TextInput";
 import { PasswordInput } from "./PasswordInput";
-import { User, Mail } from "lucide-react";
+
 export function Step1({ data, set, errors }) {
   return (
     <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-3">
+        <TextInput
+          label="First Name"
+          placeholder="Juan"
+          value={data.firstName}
+          onChange={(v) => set("firstName", v)}
+          error={errors.firstName}
+        />
+        <TextInput
+          label="Last Name"
+          placeholder="dela Cruz"
+          value={data.lastName}
+          onChange={(v) => set("lastName", v)}
+          error={errors.lastName}
+        />
+      </div>
       <TextInput
-        label="Full Name"
-        placeholder="Juan dela Cruz"
-        value={data.name}
-        onChange={(v) => set("name", v)}
-        icon={User}
-        error={errors.name}
+        label="Middle Name"
+        placeholder="Santos (optional)"
+        value={data.middleName}
+        onChange={(v) => set("middleName", v)}
       />
       <TextInput
         label="Email Address"
@@ -18,7 +32,6 @@ export function Step1({ data, set, errors }) {
         placeholder="juan@email.com"
         value={data.email}
         onChange={(v) => set("email", v)}
-        icon={Mail}
         error={errors.email}
       />
       <PasswordInput

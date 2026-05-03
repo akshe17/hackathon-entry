@@ -17,7 +17,7 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-[#0a2366] text-white hidden md:flex flex-col p-6">
         <h2 className="text-2xl font-bold mb-10">KainWise.</h2>
-        <nav className="space-y-4 flex-1">
+        <nav className="flex flex-col gap-4 flex-1">
           <a
             href="#"
             className="flex items-center gap-3 bg-blue-700/50 p-3 rounded-lg"

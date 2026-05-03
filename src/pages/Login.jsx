@@ -1,111 +1,190 @@
-import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+import { ScanBarcode } from "lucide-react";
+import { BrandName } from "../components/BrandName";
+import {
+  TextInput,
+  PasswordInput,
+  Checkbox,
+  Button,
+  Anchor,
+  Stack,
+  Title,
+  Text,
+  Box,
+  Paper,
+  Modal,
+} from "@mantine/core";
+
+function ResetPasswordModal({ opened, onClose }) {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email.trim()) setSent(true);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setSent(false);
+    setEmail("");
+  };
 
   return (
-    <div className="flex min-h-screen bg-white font-sans">
-      {/* Left Side - Branding (Hidden on mobile) */}
-      <div className="hidden lg:flex w-1/2 flex-col justify-between bg-[#0a2366] text-white p-12 relative overflow-hidden">
-        {/* Abstract background gradient to mimic the wavy texture */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a2366] via-[#0d2f8a] to-[#05143b] opacity-80"></div>
+    <Modal
+      opened={opened}
+      onClose={handleClose}
+      title={
+        <Text fw={700} size="lg" style={{ color: "#0a1930" }}>
+          Reset your password
+        </Text>
+      }
+      centered
+      radius="lg"
+      size="sm"
+    >
+      {sent ? (
+        <Stack gap="md" pb="sm">
+          <Text size="sm" c="dimmed" ta="center">
+            If <strong>{email}</strong> is registered, you'll receive a reset link shortly. Check your inbox.
+          </Text>
+          <Button fullWidth radius="md" style={{ backgroundColor: "#164bd4" }} onClick={handleClose}>
+            Done
+          </Button>
+        </Stack>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <Stack gap="md" pb="sm">
+            <Text size="sm" c="dimmed">
+              Enter your account email and we'll send you a link to reset your password.
+            </Text>
+            <TextInput
+              label="Email"
+              placeholder="you@example.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+              size="md"
+              radius="md"
+              required
+              styles={{
+                wrapper: { display: "flex", flexDirection: "column", gap: "0.5rem" },
+                label: { fontWeight: 600, fontSize: "0.875rem", color: "#111827", marginBottom: 0 },
+                input: { backgroundColor: "#f3f4f6", border: "none" },
+              }}
+            />
+            <Button type="submit" fullWidth radius="md" style={{ backgroundColor: "#164bd4" }}>
+              Send reset link
+            </Button>
+          </Stack>
+        </form>
+      )}
+    </Modal>
+  );
+}
 
-        <div className="relative z-10">
-          <span className="text-xl font-medium tracking-tight">KainWise</span>
-        </div>
+export default function Login() {
+  const [remember, setRemember] = useState(false);
+  const [resetOpened, setResetOpened] = useState(false);
 
-        <div className="relative z-10 mb-12">
-          <h1 className="text-[3.5rem] leading-[1.1] font-semibold tracking-tight">
-            Scan wise. <br /> Eat well. <br /> Feel better.
-          </h1>
-        </div>
-      </div>
+  return (
+    <Paper radius="xl" p={{ base: "xl", sm: 64 }} style={{ width: "100%", maxWidth: 560 }}>
+      <ResetPasswordModal opened={resetOpened} onClose={() => setResetOpened(false)} />
 
-      {/* Right Side - Form */}
-      <div className="flex w-full lg:w-1/2 items-center justify-center p-8 bg-[#0a2366] lg:bg-transparent">
-        <div className="w-full max-w-[480px] bg-white rounded-2xl  p-10 lg:p-14">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-[#0a1930] mb-2 leading-tight">
-              Welcome back to KainWise!
-            </h2>
-          </div>
-
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-900">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="harper@ningle.com"
-                className="w-full px-4 py-3 bg-[#f3f4f6] text-gray-900 text-sm rounded-lg border-none focus:ring-2 focus:ring-[#1d4ed8] outline-none placeholder:text-gray-500"
-              />
-            </div>
-
-            {/* Password Field */}
-            <div className="space-y-2 relative">
-              <label className="block text-sm font-semibold text-gray-900">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••••••••••"
-                  className="w-full px-4 py-3 bg-[#f3f4f6] text-gray-900 text-sm rounded-lg border-none focus:ring-2 focus:ring-[#1d4ed8] outline-none placeholder:text-gray-400 tracking-widest"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between pt-1">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 rounded border-gray-300 text-[#1d4ed8] focus:ring-[#1d4ed8]"
-                />
-                <span className="text-sm text-gray-700">
-                  Remember for 30 days
-                </span>
-              </label>
-              <a
-                href="#"
-                className="text-sm text-[#1d4ed8] hover:underline font-medium decoration-[#1d4ed8] underline-offset-4"
-              >
-                Forgot password?
-              </a>
-            </div>
-
-            {/* Actions */}
-            <div className="pt-4 space-y-4">
-              <button
-                type="submit"
-                className="w-full bg-[#164bd4] hover:bg-[#123eb0] text-white font-medium py-3 rounded-lg transition-colors"
-              >
-                Log In
-              </button>
-            </div>
-          </form>
-
-          <div className="mt-8 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="text-[#0a1930] font-bold hover:underline underline-offset-4"
+      <Stack gap="xl">
+        {/* Icon + heading */}
+        <Stack gap="md" align="center">
+          <Box
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: "50%",
+              backgroundColor: "#eef2ff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ScanBarcode size={28} color="#164bd4" strokeWidth={1.75} />
+          </Box>
+          <Stack gap={4} align="center">
+            <Text size="sm" c="dimmed" fw={500}>Welcome back to</Text>
+            <Title
+              order={2}
+              ta="center"
+              style={{ color: "#0a1930", fontWeight: 700, fontSize: "1.75rem", lineHeight: 1 }}
             >
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+              <BrandName />
+            </Title>
+          </Stack>
+        </Stack>
+
+        {/* Fields */}
+        <form onSubmit={(e) => e.preventDefault()}>
+          <Stack gap="lg">
+            <TextInput
+              label="Email"
+              placeholder="harper@ningle.com"
+              type="email"
+              size="md"
+              radius="md"
+              styles={{
+                wrapper: { display: "flex", flexDirection: "column", gap: "0.5rem" },
+                label: { fontWeight: 600, fontSize: "0.875rem", color: "#111827", marginBottom: 0 },
+                input: { backgroundColor: "#f3f4f6", border: "none" },
+              }}
+            />
+
+            <Stack gap="xs">
+              <PasswordInput
+                label="Password"
+                placeholder="••••••••••••••••"
+                size="md"
+                radius="md"
+                styles={{
+                  wrapper: { display: "flex", flexDirection: "column", gap: "0.5rem" },
+                  label: { fontWeight: 600, fontSize: "0.875rem", color: "#111827", marginBottom: 0 },
+                  input: { backgroundColor: "#f3f4f6", border: "none" },
+                  innerInput: { backgroundColor: "#f3f4f6" },
+                }}
+              />
+              <Box style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <Checkbox
+                  label="Remember for 30 days"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.currentTarget.checked)}
+                  size="sm"
+                  color="#1d4ed8"
+                  styles={{ label: { fontSize: "0.875rem", color: "#374151" } }}
+                />
+                <Anchor
+                  component="button"
+                  type="button"
+                  size="sm"
+                  fw={500}
+                  style={{ color: "#1d4ed8" }}
+                  onClick={() => setResetOpened(true)}
+                >
+                  Forgot password?
+                </Anchor>
+              </Box>
+            </Stack>
+
+            <Stack gap="md">
+              <Button type="submit" fullWidth size="md" radius="md" style={{ backgroundColor: "#164bd4" }}>
+                Log In
+              </Button>
+              <Text ta="center" size="sm" c="dimmed">
+                Don&apos;t have an account?{" "}
+                <Anchor component={Link} to="/register" fw={700} style={{ color: "#0a1930" }}>
+                  Sign Up
+                </Anchor>
+              </Text>
+            </Stack>
+          </Stack>
+        </form>
+      </Stack>
+    </Paper>
   );
 }
